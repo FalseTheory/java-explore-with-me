@@ -1,6 +1,7 @@
 package ru.practicum.ewm.model;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"uri","app","ip"})
 @Table(name = "stats")
 public class Stat {
     @Id

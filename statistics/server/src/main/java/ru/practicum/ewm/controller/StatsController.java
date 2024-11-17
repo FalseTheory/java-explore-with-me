@@ -28,9 +28,9 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<StatDto> getAll(@RequestParam(required = true) String start,
-                                @RequestParam(required = true) String end,
-                                @RequestParam(required = false) List<String> uris,
+    public List<StatDto> getAll(@RequestParam String start,
+                                @RequestParam String end,
+                                @RequestParam(required = false) String[] uris,
                                 @RequestParam(required = false, defaultValue = "false") Boolean unique) {
 
         return service.getAll(start, end, uris, unique);

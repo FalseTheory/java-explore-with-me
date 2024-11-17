@@ -39,7 +39,7 @@ public class StatServiceImpl implements StatService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StatDto> getAll(String start, String end, List<String> uris, Boolean unique) {
+    public List<StatDto> getAll(String start, String end, String[] uris, Boolean unique) {
 
 
         LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), datePattern);
@@ -49,11 +49,18 @@ public class StatServiceImpl implements StatService {
 
             return mapOccurencies(repository.findByDate(startTime, endTime).stream()
                     .map(mapper::mapStatToStatDto).toList());
-        } else if (uris != null && !unique) {
+        } else if(uris == null) {
+            return mapOccurencies(repository.findByDate(startTime, endTime).stream()
+                    .distinct().map(mapper::mapStatToStatDto).toList());
+        }
+        else if (!unique) {
             return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .map(mapper::mapStatToStatDto).toList());
         }
-        return null;
+        else {
+            return mapOccurencies(repository.findByDateAndUri(startTime,endTime, uris).stream()
+                    .distinct().map(mapper::mapStatToStatDto).toList());
+        }
     }
 
     private List<StatDto> mapOccurencies(List<StatDto> statDtoList) {
@@ -62,7 +69,7 @@ public class StatServiceImpl implements StatService {
         Set<StatDto> returnSet = new HashSet<>(statDtoList);
         returnSet.forEach(statDto -> statDto.setHits(occurencyMap.get(statDto)));
 
-        return returnSet.stream().toList();
+        return returnSet.stream().sorted((o1, o2) -> Long.compare(o2.getHits(), o1.getHits())).toList();
     }
 
 }

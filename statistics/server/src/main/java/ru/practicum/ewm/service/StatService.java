@@ -9,5 +9,5 @@ public interface StatService {
 
     ParamHitDto hit(ParamHitDto paramHitDto);
 
-    List<StatDto> getAll(String start, String end, List<String> uris, Boolean unique);
+    List<StatDto> getAll(String start, String end, String[] uris, Boolean unique);
 }
