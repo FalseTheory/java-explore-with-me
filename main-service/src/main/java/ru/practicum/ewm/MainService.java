@@ -17,6 +17,7 @@ public class MainService {
         paramHitTest.setIp("192.163.0.1");
         paramHitTest.setUri("/events/1");
         paramHitTest.setApp("ewm-main-service");
+        //проверки
         statClient.hit(paramHitTest);
         statClient.getStat("2022-09-06 11:00:23", "2025-09-06 11:00:23", null, null);
     }

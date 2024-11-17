@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public ParamHitDto hit(@RequestBody ParamHitDto paramHitDto) {
+    public ParamHitDto hit(@RequestBody @Valid ParamHitDto paramHitDto) {
         log.info("hitting endpoint - {}", paramHitDto);
         ParamHitDto returnBody = service.hit(paramHitDto);
         log.info("statistic successfully updated");
