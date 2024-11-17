@@ -1,5 +1,6 @@
 package ru.practicum.ewm.client;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -9,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class BaseClient {
+public abstract class BaseClient<T> {
 
     protected final RestClient restClient;
 
@@ -17,7 +18,7 @@ public class BaseClient {
         this.restClient = restClient;
     }
 
-    protected List<?> get(String path, String start, String end, @Nullable List<String> uris, @Nullable Boolean unique) {
+    protected List<T> get(String path, String start, String end, @Nullable List<String> uris, @Nullable Boolean unique) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(path);
         builder.queryParam("start", start);
         builder.queryParam("end", end);
@@ -31,16 +32,17 @@ public class BaseClient {
                 .uri(builder.build().encode(StandardCharsets.UTF_8).toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(List.class);
+                .body(new ParameterizedTypeReference<>() {
+                });
 
     }
 
-    protected <T> ResponseEntity<Object> post(String path, T body) {
+    protected <X> ResponseEntity<Void> post(String path, X body) {
         return restClient.post()
                 .uri(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body)
                 .retrieve()
-                .toEntity(Object.class);
+                .toBodilessEntity();
     }
 }
