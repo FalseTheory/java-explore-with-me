@@ -18,6 +18,7 @@ public class StatClient extends BaseClient {
                 .build());
         this.statUrl = statUrl;
     }
+
     public void hit(ParamHitDto paramHitDto) {
         post(statUrl + "/hit", paramHitDto);
     }

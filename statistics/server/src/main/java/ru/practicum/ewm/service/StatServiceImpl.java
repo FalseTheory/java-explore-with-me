@@ -27,6 +27,7 @@ public class StatServiceImpl implements StatService {
     private final StatMapper mapper;
 
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Override
     @Transactional
     public ParamHitDto hit(ParamHitDto paramHitDto) {
@@ -41,16 +42,14 @@ public class StatServiceImpl implements StatService {
     public List<StatDto> getAll(String start, String end, List<String> uris, Boolean unique) {
 
 
-
         LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), datePattern);
         LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), datePattern);
 
-        if(uris == null && !unique) {
+        if (uris == null && !unique) {
 
             return mapOccurencies(repository.findByDate(startTime, endTime).stream()
                     .map(mapper::mapStatToStatDto).toList());
-        }
-        else if(uris != null && !unique) {
+        } else if (uris != null && !unique) {
             return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .map(mapper::mapStatToStatDto).toList());
         }
