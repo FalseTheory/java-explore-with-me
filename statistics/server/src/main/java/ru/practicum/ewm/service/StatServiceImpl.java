@@ -47,21 +47,21 @@ public class StatServiceImpl implements StatService {
 
         if (uris == null && !unique) {
 
-            return mapOccurencies(repository.findByDate(startTime, endTime).stream()
+            return mapOccurrences(repository.findByDate(startTime, endTime).stream()
                     .map(mapper::mapStatToStatDto).toList());
         } else if (uris == null) {
-            return mapOccurencies(repository.findByDate(startTime, endTime).stream()
+            return mapOccurrences(repository.findByDate(startTime, endTime).stream()
                     .distinct().map(mapper::mapStatToStatDto).toList());
         } else if (!unique) {
-            return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
+            return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .map(mapper::mapStatToStatDto).toList());
         } else {
-            return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
+            return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .distinct().map(mapper::mapStatToStatDto).toList());
         }
     }
 
-    private List<StatDto> mapOccurencies(List<StatDto> statDtoList) {
+    private List<StatDto> mapOccurrences(List<StatDto> statDtoList) {
         Map<StatDto, Long> occurencyMap = statDtoList.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         Set<StatDto> returnSet = new HashSet<>(statDtoList);

@@ -33,7 +33,10 @@ public class StatsController {
                                 @RequestParam(required = false) String[] uris,
                                 @RequestParam(required = false, defaultValue = "false") Boolean unique) {
 
-        return service.getAll(start, end, uris, unique);
+        log.info("getting stats with params, start-{}, end -{}, uris - {}, unique - {}", start, end, uris, unique);
+        List<StatDto> returnList = service.getAll(start, end, uris, unique);
+        log.info("get request success");
+        return returnList;
     }
 
 }
