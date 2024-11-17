@@ -25,9 +25,9 @@ public class StatClient extends BaseClient {
     }
 
     public void hit(ParamHitDto paramHitDto) {
-        try{
+        try {
             post(statUrl + "/hit", paramHitDto);
-        } catch(Exception e) {
+        } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
