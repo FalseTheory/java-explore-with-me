@@ -1,0 +1,16 @@
+package ru.practicum.ewm.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ParamHitDto {
+
+    String app;
+    String uri;
+    String ip;
+    String timestamp;
+}
