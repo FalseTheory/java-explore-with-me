@@ -49,16 +49,14 @@ public class StatServiceImpl implements StatService {
 
             return mapOccurencies(repository.findByDate(startTime, endTime).stream()
                     .map(mapper::mapStatToStatDto).toList());
-        } else if(uris == null) {
+        } else if (uris == null) {
             return mapOccurencies(repository.findByDate(startTime, endTime).stream()
                     .distinct().map(mapper::mapStatToStatDto).toList());
-        }
-        else if (!unique) {
+        } else if (!unique) {
             return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .map(mapper::mapStatToStatDto).toList());
-        }
-        else {
-            return mapOccurencies(repository.findByDateAndUri(startTime,endTime, uris).stream()
+        } else {
+            return mapOccurencies(repository.findByDateAndUri(startTime, endTime, uris).stream()
                     .distinct().map(mapper::mapStatToStatDto).toList());
         }
     }
