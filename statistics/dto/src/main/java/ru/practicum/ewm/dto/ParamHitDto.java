@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 public class ParamHitDto {
 
     @NotNull
-    String app;
+    private String app;
     @NotNull
-    String uri;
+    private String uri;
     @NotNull
-    String ip;
-    String timestamp;
+    private String ip;
+    private String timestamp;
 }

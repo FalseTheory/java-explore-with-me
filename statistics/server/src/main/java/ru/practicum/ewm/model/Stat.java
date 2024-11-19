@@ -12,19 +12,19 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"uri","app","ip"})
+@EqualsAndHashCode(of = {"uri", "app", "ip"})
 @Table(name = "stats")
 public class Stat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(nullable = false, name = "uri")
-    String uri;
+    private String uri;
     @Column(nullable = false, name = "ip")
-    String ip;
+    private String ip;
     @Column(nullable = false, name = "app")
-    String app;
+    private String app;
     @Column(nullable = false, name = "timestamp")
-    Timestamp timestamp;
+    private Timestamp timestamp;
 
 }

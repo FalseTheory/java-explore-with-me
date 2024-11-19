@@ -14,7 +14,7 @@ public class ErrorHandler {
 
 
     @ExceptionHandler
-    public ApiErrorDto handleInternalError(final Exception e) {
+    public ApiErrorDto handleInternalError(final Throwable e) {
         log.warn("Unexpected error - {}", e.getMessage(), e);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
