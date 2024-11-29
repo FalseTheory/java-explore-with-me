@@ -77,35 +77,35 @@ public class EventsServiceImpl implements EventsService {
                 throw new BadParametersException("EndTime cannot be before startTime");
             }
         }
-        QEvent _event = QEvent.event;
+        QEvent qEvent = QEvent.event;
         BooleanBuilder query = new BooleanBuilder();
         Pageable pageable;
-        query.and(_event.state.eq(EventState.PUBLISHED));
+        query.and(qEvent.state.eq(EventState.PUBLISHED));
         if (params.text() != null) {
-            query.and(_event.description.contains(params.text())).or(_event.annotation.contains(params.text()));
+            query.and(qEvent.description.contains(params.text())).or(qEvent.annotation.contains(params.text()));
         }
         if (params.categories() != null) {
-            query.and(_event.category.id.in(params.categories()));
+            query.and(qEvent.category.id.in(params.categories()));
         }
         if (params.paid() != null) {
-            query.and(_event.paid.eq(params.paid()));
+            query.and(qEvent.paid.eq(params.paid()));
         }
         if (start != null) {
-            query.and(_event.eventDate
+            query.and(qEvent.eventDate
                     .after(start));
         }
         if (end != null) {
-            query.and(_event.eventDate
+            query.and(qEvent.eventDate
                     .before(end));
         }
         if (params.onlyAvailable()) {
-            query.andNot(_event.confirmedRequests.eq(QEvent.event.participationLimit));
+            query.andNot(qEvent.confirmedRequests.eq(QEvent.event.participationLimit));
         }
         switch (params.sortType()) {
             case EVENT_DATE ->
-                    pageable = PageRequest.of(params.from(), params.size(), new QSort(_event.eventDate.desc()));
+                    pageable = PageRequest.of(params.from(), params.size(), new QSort(qEvent.eventDate.desc()));
 
-            case VIEWS -> pageable = PageRequest.of(params.from(), params.size(), new QSort(_event.views.desc()));
+            case VIEWS -> pageable = PageRequest.of(params.from(), params.size(), new QSort(qEvent.views.desc()));
             case null, default -> pageable = PageRequest.of(params.from(), params.size());
         }
 
@@ -129,25 +129,25 @@ public class EventsServiceImpl implements EventsService {
                 throw new BadParametersException("EndTime cannot be before startTime");
             }
         }
-        QEvent _event = QEvent.event;
+        QEvent qEvent = QEvent.event;
         BooleanBuilder query = new BooleanBuilder();
         Pageable pageable = PageRequest.of(params.from(), params.size());
 
         if (params.users() != null) {
-            query.and(_event.initiator.id.in(params.users()));
+            query.and(qEvent.initiator.id.in(params.users()));
 
         }
         if (params.states() != null) {
-            query.and(_event.state.stringValue().in(params.states()));
+            query.and(qEvent.state.stringValue().in(params.states()));
         }
         if (params.categories() != null) {
-            query.and(_event.category.id.in(params.categories()));
+            query.and(qEvent.category.id.in(params.categories()));
         }
         if (start != null) {
-            query.and(_event.eventDate.after(start));
+            query.and(qEvent.eventDate.after(start));
         }
         if (end != null) {
-            query.and(_event.eventDate.before(end));
+            query.and(qEvent.eventDate.before(end));
         }
 
         return eventsRepository.findAll(query, pageable).stream()
