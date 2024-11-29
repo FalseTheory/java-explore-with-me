@@ -1,9 +1,12 @@
 package ru.practicum.ewm.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.model.dto.category.CategoryDto;
 import ru.practicum.ewm.model.dto.category.NewCategoryDto;
@@ -14,20 +17,21 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class CategoriesController {
     private final CategoriesService service;
 
 
     @PostMapping("/admin/categories")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto create(@RequestBody NewCategoryDto newCategoryDto) {
+    public CategoryDto create(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("creating category - {}", newCategoryDto);
         return service.create(newCategoryDto);
     }
 
     @DeleteMapping("/admin/categories/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long catId) {
+    public void delete(@PathVariable @Positive Long catId) {
         log.info("deleting category with id - {}", catId);
         service.delete(catId);
 
@@ -35,8 +39,8 @@ public class CategoriesController {
 
     @PatchMapping("/admin/categories/{catId}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto update(@PathVariable Long catId,
-                              @RequestBody NewCategoryDto updatedCategory) {
+    public CategoryDto update(@PathVariable @Positive Long catId,
+                              @RequestBody @Valid NewCategoryDto updatedCategory) {
         log.info("updating category with id - {}, and body - {}", catId, updatedCategory);
 
         return service.update(catId, updatedCategory);

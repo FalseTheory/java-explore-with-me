@@ -3,8 +3,8 @@ package ru.practicum.ewm.model.dto.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.model.EventState;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.ewm.model.util.EventState;
+import ru.practicum.ewm.model.util.Location;
 import ru.practicum.ewm.model.dto.category.CategoryDto;
 import ru.practicum.ewm.model.dto.user.UserShortDto;
 
@@ -19,12 +19,12 @@ public class EventFullDto {
     private Integer confirmedRequests;
     private LocalDateTime createdOn;
     private String description;
-    private LocalDateTime eventDate;
+    private String eventDate;
     private Long id;
     private UserShortDto initiator;
     private Location location;
     private Boolean paid;
-    private Integer participationLimit;
+    private Integer participantLimit;
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
     private EventState state;

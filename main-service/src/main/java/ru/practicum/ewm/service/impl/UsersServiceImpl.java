@@ -22,11 +22,18 @@ import java.util.List;
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository repository;
     private final UserMapper mapper;
+
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getByIds(int[] ids, Pageable pageable) {
-        BooleanExpression byIds = QUser.user.id.in(Arrays.stream(ids).asLongStream().boxed().toList());
-        Page<User> users = repository.findAll(byIds, pageable);
+    public List<UserDto> getAllFiltered(int[] ids, Pageable pageable) {
+        Page<User> users;
+        if (ids != null) {
+            BooleanExpression byIds = QUser.user.id.in(Arrays.stream(ids).asLongStream().boxed().toList());
+            users = repository.findAll(byIds, pageable);
+        } else {
+            users = repository.findAll(pageable);
+        }
+
         return users.getContent().stream().map(mapper::mapToUserDto).toList();
     }
 

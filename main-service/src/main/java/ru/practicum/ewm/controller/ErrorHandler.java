@@ -3,10 +3,15 @@ package ru.practicum.ewm.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.model.dto.ApiErrorDto;
+import ru.practicum.ewm.model.exception.BadParametersException;
+import ru.practicum.ewm.model.exception.ConflictException;
+import ru.practicum.ewm.model.exception.ForbiddenException;
 import ru.practicum.ewm.model.exception.NotFoundException;
 
 import java.io.PrintWriter;
@@ -19,7 +24,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiErrorDto handle(final DataIntegrityViolationException e) {
+    public ApiErrorDto handleIntegrityViolation(final DataIntegrityViolationException e) {
         log.info("Integrity violation exception - {}", e.getMessage(), e);
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -43,8 +48,74 @@ public class ErrorHandler {
                 LocalDateTime.now());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiErrorDto handleConflictError(final ConflictException e) {
+        log.info("conflict exception error - {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new ApiErrorDto(HttpStatus.CONFLICT.toString(),
+                "Not Found error",
+                sw.toString(),
+                LocalDateTime.now());
+    }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ApiErrorDto handleForbiddenError(final ForbiddenException e) {
+        log.info("forbidden exception error - {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new ApiErrorDto(HttpStatus.FORBIDDEN.toString(),
+                "Not Found error",
+                sw.toString(),
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorDto handleNotValidArgument(final MethodArgumentNotValidException e) {
+        log.info("forbidden exception error - {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new ApiErrorDto(HttpStatus.BAD_REQUEST.toString(),
+                "Not valid argument error",
+                sw.toString(),
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorDto handleMissingParameter(final MissingServletRequestParameterException e) {
+        log.info("missing parameter error - {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new ApiErrorDto(HttpStatus.BAD_REQUEST.toString(),
+                "Bad request error",
+                sw.toString(),
+                LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorDto handleBadParameters(final BadParametersException e) {
+        log.info("bad parameters error - {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return new ApiErrorDto(HttpStatus.BAD_REQUEST.toString(),
+                "Bad request error",
+                sw.toString(),
+                LocalDateTime.now());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiErrorDto handleInternalError(final Throwable e) {
         log.warn("Unexpected error - {}", e.getMessage(), e);
         StringWriter sw = new StringWriter();
