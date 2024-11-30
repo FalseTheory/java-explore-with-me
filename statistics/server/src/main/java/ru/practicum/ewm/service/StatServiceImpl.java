@@ -42,23 +42,72 @@ public class StatServiceImpl implements StatService {
     public List<StatDto> getAll(String start, String end, String[] uris, Boolean unique) {
 
 
-        LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), datePattern);
-        LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), datePattern);
-
-        if (uris == null && !unique) {
-
-            return mapOccurrences(repository.findByDate(startTime, endTime).stream()
-                    .map(mapper::mapStatToStatDto).toList());
-        } else if (uris == null) {
-            return mapOccurrences(repository.findByDate(startTime, endTime).stream()
-                    .distinct().map(mapper::mapStatToStatDto).toList());
-        } else if (!unique) {
-            return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
-                    .map(mapper::mapStatToStatDto).toList());
-        } else {
-            return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
-                    .distinct().map(mapper::mapStatToStatDto).toList());
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+        if (start != null) {
+            startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), datePattern);
         }
+        if (end != null) {
+            endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), datePattern);
+        }
+        if (start != null && end != null) {
+            if (uris == null && !unique) {
+                return mapOccurrences(repository.findByDate(startTime, endTime).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else if (uris == null) {
+                return mapOccurrences(repository.findByDate(startTime, endTime).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            } else if (!unique) {
+                return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else {
+                return mapOccurrences(repository.findByDateAndUri(startTime, endTime, uris).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            }
+        } else if (end == null && start != null) {
+            if (uris == null && !unique) {
+                return mapOccurrences(repository.findByDateStart(startTime).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else if (uris == null) {
+                return mapOccurrences(repository.findByDateStart(startTime).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            } else if (!unique) {
+                return mapOccurrences(repository.findByDateStartAndUri(startTime, uris).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else {
+                return mapOccurrences(repository.findByDateStartAndUri(startTime, uris).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            }
+        } else if (end != null) {
+            if (uris == null && !unique) {
+                return mapOccurrences(repository.findByDateEnd(endTime).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else if (uris == null) {
+                return mapOccurrences(repository.findByDateEnd(endTime).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            } else if (!unique) {
+                return mapOccurrences(repository.findByDateEndAndUri(endTime, uris).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else {
+                return mapOccurrences(repository.findByDateEndAndUri(endTime, uris).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            }
+        } else {
+            if (uris == null && !unique) {
+                return mapOccurrences(repository.findAll().stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else if (uris == null) {
+                return mapOccurrences(repository.findAll().stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            } else if (!unique) {
+                return mapOccurrences(repository.findByUri(uris).stream()
+                        .map(mapper::mapStatToStatDto).toList());
+            } else {
+                return mapOccurrences(repository.findByUri(uris).stream()
+                        .distinct().map(mapper::mapStatToStatDto).toList());
+            }
+        }
+
     }
 
     private List<StatDto> mapOccurrences(List<StatDto> statDtoList) {

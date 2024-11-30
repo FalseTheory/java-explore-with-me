@@ -110,8 +110,10 @@ public class EventsServiceImpl implements EventsService {
         }
 
         List<Event> eventList = eventsRepository.findAll(query, pageable).getContent();
-
-
+        for (Event event : eventList) {
+            paramHitDto.setUri(baseUri + "/" + event.getId());
+            statClient.hit(paramHitDto);
+        }
         return eventList
                 .stream()
                 .map(mapper::mapEventToFullDto).toList();
