@@ -11,7 +11,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
       - SPRING_DATASOURCE_USERNAME=stats
       - SPRING_DATASOURCE_PASSWORD=5353
-      - TZ=Asia/Tomsk
   stats-db:
     image: postgres:16.1
     container_name: postgres-stats
@@ -40,7 +39,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5433/ewm
       - SPRING_DATASOURCE_USERNAME=ewm
       - SPRING_DATASOURCE_PASSWORD=5353
-      - TZ=Asia/Tomsk
 
   ewm-db:
     image: postgres:16.1

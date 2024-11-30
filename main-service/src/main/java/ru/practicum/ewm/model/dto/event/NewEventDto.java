@@ -35,9 +35,6 @@ public class NewEventDto {
 
     @AssertTrue
     public boolean isValidDate() {
-        if (eventDate == null) {
-            return true;
-        }
         LocalDateTime now = LocalDateTime.now();
         final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
