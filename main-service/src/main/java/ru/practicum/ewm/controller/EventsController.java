@@ -34,7 +34,9 @@ public class EventsController {
     public EventFullDto createEvent(@PathVariable @Positive Long userId,
                                     @RequestBody @Valid NewEventDto newEventDto) {
         log.info("user with id - {}, creating event - {}", userId, newEventDto);
-        return service.create(userId, newEventDto);
+        EventFullDto event = service.create(userId, newEventDto);
+        log.info("event created");
+        return event;
     }
 
 
@@ -53,6 +55,7 @@ public class EventsController {
                 rangeEnd, onlyAvailable, sortType, from, size);
         ParamHitDto paramHitDto = new ParamHitDto("ewm-main-service", request.getRequestURI(),
                 request.getRemoteAddr(), LocalDateTime.now().toString());
+        log.info("retrieving all events with given parameters - {}", params);
         return service.getAll(params, paramHitDto);
     }
 
@@ -65,6 +68,7 @@ public class EventsController {
                                      @RequestParam(defaultValue = "0") Integer from,
                                      @RequestParam(defaultValue = "10") Integer size) {
         AdminSearchParams params = new AdminSearchParams(users, states, categories, rangeStart, rangeEnd, from, size);
+        log.info("retrieving all events with given admin parameters - {}", params);
         return service.getAll(params);
     }
 
@@ -73,6 +77,7 @@ public class EventsController {
                             HttpServletRequest request) {
         ParamHitDto paramHitDto = new ParamHitDto("ewm-main-service", request.getRequestURI(),
                 request.getRemoteAddr(), LocalDateTime.now().toString());
+        log.info("retrieving event with id - {}", eventId);
         return service.get(eventId, paramHitDto);
     }
 
@@ -80,6 +85,7 @@ public class EventsController {
     public List<EventFullDto> getAll(@PathVariable @Positive Long userId,
                                      @RequestParam(defaultValue = "0") Integer from,
                                      @RequestParam(defaultValue = "10") Integer size) {
+        log.info("retrieving all events for user - {}", userId);
         return service.getAll(userId, PageRequest.of(from, size));
     }
 
@@ -89,18 +95,24 @@ public class EventsController {
                                @RequestBody @Valid UpdateEventUserRequest updateBody) {
         updateBody.setEventId(eventId);
         updateBody.setUserId(userId);
-        return service.update(updateBody);
+        log.info("user - {} update of event - {}", userId, eventId);
+        EventFullDto updated = service.update(updateBody);
+        log.info("updated successfully");
+        return updated;
     }
 
     @PatchMapping("/admin/events/{eventId}")
     public EventFullDto publishEvent(@PathVariable @Positive Long eventId,
                                      @RequestBody @Valid UpdateEventAdminRequest updateBody) {
-
-        return service.publish(eventId, updateBody);
+        log.info("publishing event - {} with body - {}", eventId, updateBody);
+        EventFullDto published = service.publish(eventId, updateBody);
+        log.info("operation successfull");
+        return published;
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
     public EventFullDto get(@PathVariable @Positive Long userId, @PathVariable @Positive Long eventId) {
+        log.info("user - {} retrieving information about event - {}", userId, eventId);
         return service.get(userId, eventId);
     }
 

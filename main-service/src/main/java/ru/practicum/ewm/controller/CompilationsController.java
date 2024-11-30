@@ -28,30 +28,40 @@ public class CompilationsController {
                                        @RequestParam(defaultValue = "0") Integer from,
                                        @RequestParam(defaultValue = "10") Integer size) {
 
+        log.info("retrieving all compilations with parameters: pinned - {}", pinned);
         return service.getAll(pinned, PageRequest.of(from, size));
     }
 
     @GetMapping("/compilations/{compId}")
     public CompilationDto get(@PathVariable @Positive Long compId) {
+        log.info("retrieving compilation with id - {}", compId);
         return service.get(compId);
     }
 
     @PostMapping("/admin/compilations")
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto create(@RequestBody @Valid NewCompilationDto newCompilationDto) {
-        return service.create(newCompilationDto);
+        log.info("creating new compilation with body - {}", newCompilationDto);
+        CompilationDto created = service.create(newCompilationDto);
+        log.info("created successfully");
+        return created;
     }
 
     @DeleteMapping("/admin/compilations/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable @Positive Long compId) {
+        log.info("deleting compilation with id - {}", compId);
         service.delete(compId);
+        log.info("deleted successfully");
     }
 
     @PatchMapping("/admin/compilations/{compId}")
     public CompilationDto update(@PathVariable @Positive Long compId,
                                  @RequestBody @Valid UpdateCompilationRequest updateBody) {
-        return service.update(compId, updateBody);
+        log.info("updating compilation with id - {}, with body - {}", compId, updateBody);
+        CompilationDto updated = service.update(compId, updateBody);
+        log.info("updated successfully");
+        return updated;
 
     }
 

@@ -26,7 +26,9 @@ public class CategoriesController {
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto create(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("creating category - {}", newCategoryDto);
-        return service.create(newCategoryDto);
+        CategoryDto createdCategory = service.create(newCategoryDto);
+        log.info("created successfully");
+        return createdCategory;
     }
 
     @DeleteMapping("/admin/categories/{catId}")
@@ -34,6 +36,7 @@ public class CategoriesController {
     public void delete(@PathVariable @Positive Long catId) {
         log.info("deleting category with id - {}", catId);
         service.delete(catId);
+        log.info("category with id - {} has been deleted", catId);
 
     }
 
@@ -42,8 +45,9 @@ public class CategoriesController {
     public CategoryDto update(@PathVariable @Positive Long catId,
                               @RequestBody @Valid NewCategoryDto updatedCategory) {
         log.info("updating category with id - {}, and body - {}", catId, updatedCategory);
-
-        return service.update(catId, updatedCategory);
+        CategoryDto updated = service.update(catId, updatedCategory);
+        log.info("updated successfully");
+        return updated;
     }
 
     @GetMapping("/categories")

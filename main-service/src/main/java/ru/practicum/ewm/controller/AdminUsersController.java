@@ -26,6 +26,7 @@ public class AdminUsersController {
     public List<UserDto> getUsers(@RequestParam(required = false) int[] ids,
                                   @RequestParam(defaultValue = "0") Integer from,
                                   @RequestParam(defaultValue = "10") Integer size) {
+        log.info("retrieveing all users (admin endpoint");
         return service.getAllFiltered(ids, PageRequest.of(from, size));
 
     }
@@ -35,12 +36,16 @@ public class AdminUsersController {
     public void deleteUser(@PathVariable @Positive Long userId) {
         log.info("deleting user with id - {}", userId);
         service.delete(userId);
+        log.info("user with id - {} has been deleted", userId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@RequestBody @Valid NewUserRequest newUser) {
-        return service.create(newUser);
+        log.info("creating user with body - {}", newUser);
+        UserDto created = service.create(newUser);
+        log.info("created successfully");
+        return created;
     }
 
 }
