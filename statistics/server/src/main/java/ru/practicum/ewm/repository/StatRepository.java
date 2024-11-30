@@ -16,20 +16,4 @@ public interface StatRepository extends JpaRepository<Stat, Long> {
             "and s.uri in (?3)")
     List<Stat> findByDateAndUri(LocalDateTime start, LocalDateTime end, String[] uris);
 
-    @Query("select s from Stat s where (s.timestamp >= ?1)")
-    List<Stat> findByDateStart(LocalDateTime start);
-
-    @Query("select s from Stat s where (s.timestamp >= ?1) " +
-            "and s.uri in (?2)")
-    List<Stat> findByDateStartAndUri(LocalDateTime start, String[] uris);
-
-    @Query("select s from Stat s where (s.timestamp < ?1)")
-    List<Stat> findByDateEnd(LocalDateTime end);
-
-    @Query("select s from Stat s where and (s.timestamp < ?1) " +
-            "and s.uri in (?2)")
-    List<Stat> findByDateEndAndUri(LocalDateTime end, String[] uris);
-
-    @Query("select s from Stat s where s.uri in (?1)")
-    List<Stat> findByUri( String[] uris);
 }

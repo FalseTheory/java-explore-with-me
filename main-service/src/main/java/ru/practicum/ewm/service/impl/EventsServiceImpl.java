@@ -77,6 +77,7 @@ public class EventsServiceImpl implements EventsService {
                 throw new BadParametersException("EndTime cannot be before startTime");
             }
         }
+        statClient.hit(paramHitDto);
         QEvent qEvent = QEvent.event;
         BooleanBuilder query = new BooleanBuilder();
         Pageable pageable;
