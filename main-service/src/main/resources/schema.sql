@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS compilations_events(
 );
 CREATE TABLE IF NOT EXISTS participations (
 	id serial NOT NULL UNIQUE,
-	created timestamp(9) without time zone NOT NULL,
+	created timestamp without time zone NOT NULL,
 	event_id bigint NOT NULL,
 	requester_id bigint NOT NULL,
 	status varchar(255) NOT NULL,

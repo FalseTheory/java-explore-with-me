@@ -21,6 +21,7 @@ import ru.practicum.ewm.repository.UsersRepository;
 import ru.practicum.ewm.service.ParticipationsService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class ParticipationsServiceImpl implements ParticipationsService {
     private final UsersRepository usersRepository;
     private final ParticipationRepository participationRepository;
     private final EventsRepository eventsRepository;
+
+    private final DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 
     @Override
     @Transactional(readOnly = true)
@@ -71,7 +74,7 @@ public class ParticipationsServiceImpl implements ParticipationsService {
         }
         participation.setEvent(event);
         participation.setRequester(user);
-        participation.setCreated(now);
+        participation.setCreated(LocalDateTime.parse(now.format(pattern), pattern));
         if (event.getParticipationLimit() == 0) {
             participation.setStatus(RequestStatus.CONFIRMED);
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
@@ -82,7 +85,9 @@ public class ParticipationsServiceImpl implements ParticipationsService {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             eventsRepository.save(event);
         }
+
         participation = participationRepository.save(participation);
+        System.out.println(participation.getCreated());
 
         return mapper.mapToDto(participation);
     }
