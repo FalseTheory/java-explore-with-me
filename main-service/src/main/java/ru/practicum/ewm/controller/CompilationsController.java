@@ -2,6 +2,7 @@ package ru.practicum.ewm.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -25,8 +26,8 @@ public class CompilationsController {
 
     @GetMapping("/compilations")
     public List<CompilationDto> getAll(@RequestParam(required = false) Boolean pinned,
-                                       @RequestParam(defaultValue = "0") Integer from,
-                                       @RequestParam(defaultValue = "10") Integer size) {
+                                       @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                       @RequestParam(defaultValue = "10") @Positive Integer size) {
 
         log.info("retrieving all compilations with parameters: pinned - {}", pinned);
         return service.getAll(pinned, PageRequest.of(from, size));

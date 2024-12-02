@@ -21,15 +21,15 @@ public class ParticipationRequestsController {
     private final ParticipationsService service;
 
     @GetMapping("/users/{userId}/requests")
-    public List<ParticipationRequestDto> getAllUserRequests(@PathVariable Long userId) {
+    public List<ParticipationRequestDto> getAllUserRequests(@PathVariable @Positive Long userId) {
         log.info("retrieving all participation requests for user - {}", userId);
         return service.getAllForUser(userId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users/{userId}/requests")
-    public ParticipationRequestDto create(@PathVariable Long userId,
-                                          @RequestParam Long eventId) {
+    public ParticipationRequestDto create(@PathVariable @Positive Long userId,
+                                          @RequestParam @Positive Long eventId) {
         log.info("user - {} trying to create participation request for event {}", userId, eventId);
         ParticipationRequestDto created = service.create(userId, eventId);
         log.info("request created successfully");

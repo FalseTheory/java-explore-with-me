@@ -27,6 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ParticipationsServiceImpl implements ParticipationsService {
 
     private final ParticipationMapper mapper;
@@ -50,7 +51,6 @@ public class ParticipationsServiceImpl implements ParticipationsService {
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto create(Long userId, Long eventId) {
         LocalDateTime now = LocalDateTime.now();
         Participation participation = new Participation();
@@ -93,11 +93,9 @@ public class ParticipationsServiceImpl implements ParticipationsService {
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto cancel(Long userId, Long requestId) {
         Participation participation = participationRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("request with id - " + requestId + " not found"));
-        System.out.println(participation.getRequester().getId());
         if (!participation.getRequester().getId().equals(userId)) {
             throw new ForbiddenException("user with id - " + userId + " dont have access to this request");
         }
@@ -118,7 +116,6 @@ public class ParticipationsServiceImpl implements ParticipationsService {
     }
 
     @Override
-    @Transactional
     public EventRequestStatusUpdateResult updateUserEventsRequests(EventRequestStatusUpdateRequest updateRequest) {
         EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
         Event event = eventsRepository.findById(updateRequest.getEventId())

@@ -17,24 +17,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository repository;
     private final CategoriesMapper mapper;
 
     @Override
-    @Transactional
     public CategoryDto create(NewCategoryDto newCategoryDto) {
         return mapper.mapToCategoryDto(repository.save(mapper.mapToCategory(newCategoryDto)));
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
     }
 
     @Override
-    @Transactional
     public CategoryDto update(Long id, NewCategoryDto updatedCategory) {
         Category oldCat = repository.findById(id)
                 .orElseThrow((() -> new NotFoundException("category with id -" + id + " not found")));

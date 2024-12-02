@@ -40,6 +40,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventsServiceImpl implements EventsService {
 
     private final EventsMapper mapper;
@@ -48,11 +49,9 @@ public class EventsServiceImpl implements EventsService {
     private final CategoriesRepository categoriesRepository;
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final StatClient statClient;
-    private final LocalDateTime launchTime = LocalDateTime.of(2020, 12, 12, 12, 12);
 
 
     @Override
-    @Transactional
     public EventFullDto create(Long id, NewEventDto newEventDto) {
         User user = usersRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user with id -" + id + " not found"));
@@ -166,14 +165,14 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    @Transactional
     public EventFullDto get(Long id, ParamHitDto paramHitDto) {
         BooleanExpression expression = QEvent.event.id.eq(id).and(QEvent.event.state.eq(EventState.PUBLISHED));
         Event event = eventsRepository.findOne(expression)
                 .orElseThrow(() -> new NotFoundException("event with id -" + id + " not found"));
 
         statClient.hit(paramHitDto);
-        List<StatDto> list = statClient.getStat(launchTime.format(datePattern),
+        LocalDateTime fromStart = LocalDateTime.of(0, 1, 1, 0, 0);
+        List<StatDto> list = statClient.getStat(fromStart.format(datePattern),
                 LocalDateTime.now().plusDays(1).format(datePattern), List.of(paramHitDto.getUri()), true);
         event.setViews((long) list.size());
 
@@ -196,7 +195,6 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    @Transactional
     public EventFullDto update(UpdateEventUserRequest updateBody) {
         usersRepository.findById(updateBody.getUserId())
                 .orElseThrow(() -> new NotFoundException("user with id -" + updateBody.getUserId() + " not found"));
@@ -247,7 +245,6 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    @Transactional
     public EventFullDto publish(Long eventId, UpdateEventAdminRequest updateBody) {
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("event with id -" + eventId + " not found"));

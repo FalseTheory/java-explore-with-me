@@ -3,9 +3,11 @@ package ru.practicum.ewm.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,15 +43,17 @@ public class EventsController {
 
 
     @GetMapping("/events")
-    public List<EventFullDto> getAll(@RequestParam(required = false, defaultValue = "") String text,
+    public List<EventFullDto> getAll(@RequestParam(defaultValue = "") String text,
                                      @RequestParam(required = false) Integer[] categories,
                                      @RequestParam(required = false) Boolean paid,
-                                     @RequestParam(required = false) String rangeStart,
-                                     @RequestParam(required = false) String rangeEnd,
+                                     @RequestParam(required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String rangeStart,
+                                     @RequestParam(required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String rangeEnd,
                                      @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                      @RequestParam(required = false) SortType sortType,
-                                     @RequestParam(defaultValue = "0") Integer from,
-                                     @RequestParam(defaultValue = "10") Integer size,
+                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                     @RequestParam(defaultValue = "10") @Positive Integer size,
                                      HttpServletRequest request) {
         SearchParams params = new SearchParams(text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, sortType, from, size);
@@ -63,10 +67,12 @@ public class EventsController {
     public List<EventFullDto> getAll(@RequestParam(required = false) Long[] users,
                                      @RequestParam(required = false) String[] states,
                                      @RequestParam(required = false) Long[] categories,
-                                     @RequestParam(required = false) String rangeStart,
-                                     @RequestParam(required = false) String rangeEnd,
-                                     @RequestParam(defaultValue = "0") Integer from,
-                                     @RequestParam(defaultValue = "10") Integer size) {
+                                     @RequestParam(required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String rangeStart,
+                                     @RequestParam(required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String rangeEnd,
+                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                     @RequestParam(defaultValue = "10") @Positive Integer size) {
         AdminSearchParams params = new AdminSearchParams(users, states, categories, rangeStart, rangeEnd, from, size);
         log.info("retrieving all events with given admin parameters - {}", params);
         return service.getAll(params);
@@ -83,8 +89,8 @@ public class EventsController {
 
     @GetMapping("/users/{userId}/events")
     public List<EventFullDto> getAll(@PathVariable @Positive Long userId,
-                                     @RequestParam(defaultValue = "0") Integer from,
-                                     @RequestParam(defaultValue = "10") Integer size) {
+                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                     @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("retrieving all events for user - {}", userId);
         return service.getAll(userId, PageRequest.of(from, size));
     }

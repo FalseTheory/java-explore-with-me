@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository repository;
     private final UserMapper mapper;
@@ -38,13 +39,11 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    @Transactional
     public UserDto create(NewUserRequest newUser) {
         return mapper.mapToUserDto(repository.save(mapper.mapNewUserToUser(newUser)));
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
     }

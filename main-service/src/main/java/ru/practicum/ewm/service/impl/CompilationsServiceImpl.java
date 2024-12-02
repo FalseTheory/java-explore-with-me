@@ -22,6 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CompilationsServiceImpl implements CompilationsService {
 
     private final CompilationsRepository compilationsRepository;
@@ -46,7 +47,6 @@ public class CompilationsServiceImpl implements CompilationsService {
     }
 
     @Override
-    @Transactional
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         List<Event> compilationEvents = new ArrayList<>();
         if (newCompilationDto.getEvents() != null) {
@@ -70,13 +70,11 @@ public class CompilationsServiceImpl implements CompilationsService {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         compilationsRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
     public CompilationDto update(Long id, UpdateCompilationRequest updateBody) {
         Compilation compilation = compilationsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("compilation with id -" + id + " not found"));

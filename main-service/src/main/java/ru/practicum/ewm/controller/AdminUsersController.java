@@ -2,6 +2,7 @@ package ru.practicum.ewm.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +25,8 @@ public class AdminUsersController {
 
     @GetMapping
     public List<UserDto> getUsers(@RequestParam(required = false) int[] ids,
-                                  @RequestParam(defaultValue = "0") Integer from,
-                                  @RequestParam(defaultValue = "10") Integer size) {
+                                  @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                  @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("retrieveing all users (admin endpoint");
         return service.getAllFiltered(ids, PageRequest.of(from, size));
 

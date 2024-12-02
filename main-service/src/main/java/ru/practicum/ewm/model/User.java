@@ -15,7 +15,7 @@ import lombok.ToString;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String email;
-    String name;
+    private Long id;
+    private String email;
+    private String name;
 }

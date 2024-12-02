@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface EventsMapper {
 
+    DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Mapping(target = "lat", source = "newEventDto.location.lat")
     @Mapping(target = "lon", source = "newEventDto.location.lon")
@@ -43,7 +44,6 @@ public interface EventsMapper {
     }
 
     default LocalDateTime stringToLocalDateTime(NewEventDto eventDto) {
-        final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return LocalDateTime.parse(eventDto.getEventDate(), datePattern);
     }
@@ -54,7 +54,6 @@ public interface EventsMapper {
 
     default String formatTime(Event event) {
         LocalDateTime localDateTime = event.getEventDate();
-        final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return localDateTime.format(datePattern);
     }
 

@@ -2,6 +2,7 @@ package ru.practicum.ewm.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,6 @@ import java.util.List;
 @Validated
 public class CategoriesController {
     private final CategoriesService service;
-
 
     @PostMapping("/admin/categories")
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,8 +51,8 @@ public class CategoriesController {
     }
 
     @GetMapping("/categories")
-    public List<CategoryDto> getAll(@RequestParam(defaultValue = "0") Integer from,
-                                    @RequestParam(defaultValue = "10") Integer size) {
+    public List<CategoryDto> getAll(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                    @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("retrieving all categories");
         return service.getAll(PageRequest.of(from, size));
 
