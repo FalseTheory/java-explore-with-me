@@ -127,63 +127,30 @@ public class ParticipationsServiceImpl implements ParticipationsService {
         if (limit > 0 && participants == limit) {
             throw new ConflictException("Event has reached participants limit");
         }
-        if (limit == 0 && !event.getRequestModeration()) {
-            List<Participation> participationList = participationRepository.findAllById(updateRequest.getRequestIds());
-            for (Participation participation : participationList) {
-                participation.setStatus(RequestStatus.CONFIRMED);
-                result.getConfirmedRequests().add(mapper.mapToDto(participation));
+        RequestStatus status = updateRequest.getStatus();
+        List<Participation> participationList = participationRepository.findAllById(updateRequest.getRequestIds());
+        for (Participation participation : participationList) {
+            if (participation.getStatus() != RequestStatus.PENDING) {
+                throw new ConflictException("You can only change pending requests");
+            }
+            if (status == RequestStatus.CONFIRMED && limit > participants) {
+                participation.setStatus(status);
                 participants++;
+                result.getConfirmedRequests().add(mapper.mapToDto(participation));
+            } else if (status == RequestStatus.CONFIRMED && limit == participants) {
+                participation.setStatus(RequestStatus.REJECTED);
+                result.getRejectedRequests().add(mapper.mapToDto(participation));
+            } else {
+                participation.setStatus(status);
+                result.getRejectedRequests().add(mapper.mapToDto(participation));
             }
-            participationRepository.saveAll(participationList);
-            event.setConfirmedRequests(participants);
-            eventsRepository.save(event);
-            return result;
 
-        } else if (limit == 0) {
-            List<Participation> participationList = participationRepository.findAllById(updateRequest.getRequestIds());
-            for (Participation participation : participationList) {
-                if (participation.getStatus() != RequestStatus.PENDING) {
-                    throw new ConflictException("You can only change pending requests");
-                }
-                participation.setStatus(updateRequest.getStatus());
-                if (participation.getStatus() == RequestStatus.CONFIRMED) {
-                    participants++;
-                    result.getConfirmedRequests().add(mapper.mapToDto(participation));
-                }
-                if (participation.getStatus() == RequestStatus.REJECTED) {
-                    result.getRejectedRequests().add(mapper.mapToDto(participation));
-                }
-
-            }
-            participationRepository.saveAll(participationList);
-            event.setConfirmedRequests(participants);
-            eventsRepository.save(event);
-            return result;
-        } else {
-            RequestStatus status = updateRequest.getStatus();
-            List<Participation> participationList = participationRepository.findAllById(updateRequest.getRequestIds());
-            for (Participation participation : participationList) {
-                if (participation.getStatus() != RequestStatus.PENDING) {
-                    throw new ConflictException("You can only change pending requests");
-                }
-                if (status == RequestStatus.CONFIRMED && limit > participants) {
-                    participation.setStatus(status);
-                    participants++;
-                    result.getConfirmedRequests().add(mapper.mapToDto(participation));
-                } else if (status == RequestStatus.CONFIRMED && limit == participants) {
-                    participation.setStatus(RequestStatus.REJECTED);
-                    result.getRejectedRequests().add(mapper.mapToDto(participation));
-                } else {
-                    participation.setStatus(status);
-                    result.getRejectedRequests().add(mapper.mapToDto(participation));
-                }
-
-            }
-            event.setConfirmedRequests(participants);
-            eventsRepository.save(event);
-            participationRepository.saveAll(participationList);
-            return result;
         }
-
+        event.setConfirmedRequests(participants);
+        eventsRepository.save(event);
+        participationRepository.saveAll(participationList);
+        return result;
     }
+
 }
+
