@@ -94,7 +94,7 @@
 									"    pm.expect(target.author).to.not.be.null;\r",
 									"    pm.expect(target.event).to.not.be.null;\r",
 									"    pm.expect(target.publishedAt).to.not.be.null;\r",
-									"    pm.expect(target.edited).equal('false', 'Комментарий не может быть отредактированным при создании');\r",
+									"    pm.expect(target.edited).equal(false, 'Комментарий не может быть отредактированным при создании');\r",
 									"});\r",
 									""
 								],
@@ -220,6 +220,7 @@
 									"pm.expect(target).to.have.property('event');\r",
 									"pm.expect(target).to.have.property('publishedAt');\r",
 									"pm.expect(target).to.have.property('text');\r",
+									"pm.expect(target).to.have.property('edited');\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
@@ -228,6 +229,7 @@
 									"    pm.expect(target.author).to.not.be.null;\r",
 									"    pm.expect(target.event).to.not.be.null;\r",
 									"    pm.expect(target.publishedAt).to.not.be.null;\r",
+									"    pm.expect(target.edited).equal('false', 'Комментарий не может быть отредактированным при создании');\r",
 									"});\r",
 									""
 								],
