@@ -3,12 +3,14 @@ package ru.practicum.ewm.model.dto.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.model.dto.comment.CommentShortDto;
 import ru.practicum.ewm.model.util.EventState;
 import ru.practicum.ewm.model.util.Location;
 import ru.practicum.ewm.model.dto.category.CategoryDto;
 import ru.practicum.ewm.model.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,4 +32,5 @@ public class EventFullDto {
     private EventState state;
     private String title;
     private Long views;
+    private List<CommentShortDto> eventComments;
 }

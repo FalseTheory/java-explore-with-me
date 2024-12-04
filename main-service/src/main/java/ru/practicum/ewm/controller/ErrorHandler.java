@@ -45,7 +45,7 @@ public class ErrorHandler {
     public ApiErrorDto handleConflictError(final ConflictException e) {
         log.info("conflict exception error - {}", e.getMessage(), e);
         return new ApiErrorDto(HttpStatus.CONFLICT.toString(),
-                "Not Found error",
+                "Conflict error",
                 e.getMessage(),
                 LocalDateTime.now());
     }
@@ -55,7 +55,7 @@ public class ErrorHandler {
     public ApiErrorDto handleForbiddenError(final ForbiddenException e) {
         log.info("forbidden exception error - {}", e.getMessage(), e);
         return new ApiErrorDto(HttpStatus.FORBIDDEN.toString(),
-                "Not Found error",
+                "Forbidden error",
                 e.getMessage(),
                 LocalDateTime.now());
     }
@@ -85,7 +85,7 @@ public class ErrorHandler {
     public ApiErrorDto handleBadParameters(final BadParametersException e) {
         log.info("bad parameters error - {}", e.getMessage(), e);
         return new ApiErrorDto(HttpStatus.BAD_REQUEST.toString(),
-                "Bad request error",
+                "Bad parameters error",
                 e.getMessage(),
                 LocalDateTime.now());
     }
