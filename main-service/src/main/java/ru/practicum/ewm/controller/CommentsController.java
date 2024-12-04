@@ -2,13 +2,16 @@ package ru.practicum.ewm.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.model.dto.comment.CommentDto;
 import ru.practicum.ewm.model.dto.comment.NewCommentDto;
+import ru.practicum.ewm.model.util.CommentSearchParams;
 import ru.practicum.ewm.service.CommentsService;
 
 import java.util.List;
@@ -48,6 +51,16 @@ public class CommentsController {
         commentDto.setAuthorId(userId);
         log.info("updating comment - {}, with body - {}", commentId, commentDto);
         return service.update(commentId, commentDto);
+    }
+
+    @GetMapping("/admin/comments")
+    public List<CommentDto> getAllComments(@RequestParam(required = false) Long[] users,
+                                           @RequestParam(required = false) Long[] events,
+                                           @RequestParam(defaultValue = "false") Boolean edited,
+                                           @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                           @RequestParam(defaultValue = "10") @Positive Integer size) {
+        CommentSearchParams searchParams = new CommentSearchParams(users, events, edited);
+        return service.getAll(searchParams, PageRequest.of(from, size));
     }
 
     @DeleteMapping("/users/{userId}/comments/{commentId}")

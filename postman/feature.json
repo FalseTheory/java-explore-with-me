@@ -652,8 +652,8 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-									"    pm.expect(target.eventComments[0].author.id).equal(pm.collectionVariables.get(\"uid\"));\r",
-									"    pm.expect(target.eventComments[0].eventId).equal(pm.collectionVariables.get(\"eid\"));\r",
+									"    pm.expect(target.eventComments[0].author.id).equal(Number(pm.collectionVariables.get(\"uid\")));\r",
+									"    pm.expect(target.eventComments[0].eventId).equal(Number(pm.collectionVariables.get(\"eid\")));\r",
 									"    \r",
 									"});"
 								],
@@ -977,6 +977,15 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{request_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 							"host": [

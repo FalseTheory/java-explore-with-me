@@ -1,7 +1,9 @@
 package ru.practicum.ewm.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.mapper.CommentsMapper;
@@ -13,6 +15,7 @@ import ru.practicum.ewm.model.dto.comment.CommentDto;
 import ru.practicum.ewm.model.dto.comment.NewCommentDto;
 import ru.practicum.ewm.model.exception.ConflictException;
 import ru.practicum.ewm.model.exception.NotFoundException;
+import ru.practicum.ewm.model.util.CommentSearchParams;
 import ru.practicum.ewm.model.util.EventState;
 import ru.practicum.ewm.repository.CommentsRepository;
 import ru.practicum.ewm.repository.EventsRepository;
@@ -81,8 +84,28 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
+    public List<CommentDto> getAll(CommentSearchParams params, Pageable pageable) {
+        BooleanBuilder query = new BooleanBuilder();
+        QComment qComment = QComment.comment;
+        if(params.users()!=null) {
+            query.or(qComment.author.id.in(params.users()));
+        }
+        if(params.events()!=null) {
+            query.or(qComment.event.id.in(params.users()));
+        }
+        if(params.edited()){
+            query.and(qComment.edited.isTrue());
+        }else {
+            query.and(qComment.edited.isFalse());
+        }
+        return commentsRepository.findAll(query, pageable).stream()
+                .map(mapper::mapToDto)
+                .toList();
+    }
+
+    @Override
     public CommentDto update(Long commentId, NewCommentDto updateBody) {
-        User user = usersRepository.findById(updateBody.getAuthorId())
+        usersRepository.findById(updateBody.getAuthorId())
                 .orElseThrow(() -> new NotFoundException("User with id - " + updateBody.getAuthorId() + " not found"));
         Comment comment = commentsRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment with id - " + commentId + " not found"));
