@@ -7,6 +7,7 @@ import ru.practicum.ewm.dto.ParamHitDto;
 import ru.practicum.ewm.dto.StatDto;
 import ru.practicum.ewm.mapper.StatMapper;
 import ru.practicum.ewm.model.Stat;
+import ru.practicum.ewm.model.exception.BadParametersException;
 import ru.practicum.ewm.repository.StatRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -45,8 +46,10 @@ public class StatServiceImpl implements StatService {
         LocalDateTime startTime = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), datePattern);
         LocalDateTime endTime = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), datePattern);
 
+        if (startTime.isAfter(endTime)) {
+            throw new BadParametersException("wrong dates");
+        }
         if (uris == null && !unique) {
-
             return mapOccurrences(repository.findByDate(startTime, endTime).stream()
                     .map(mapper::mapStatToStatDto).toList());
         } else if (uris == null) {
@@ -71,3 +74,7 @@ public class StatServiceImpl implements StatService {
     }
 
 }
+
+
+
+
