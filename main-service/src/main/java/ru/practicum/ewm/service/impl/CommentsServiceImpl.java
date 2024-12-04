@@ -87,15 +87,15 @@ public class CommentsServiceImpl implements CommentsService {
     public List<CommentDto> getAll(CommentSearchParams params, Pageable pageable) {
         BooleanBuilder query = new BooleanBuilder();
         QComment qComment = QComment.comment;
-        if(params.users()!=null) {
+        if (params.users() != null) {
             query.or(qComment.author.id.in(params.users()));
         }
-        if(params.events()!=null) {
+        if (params.events() != null) {
             query.or(qComment.event.id.in(params.users()));
         }
-        if(params.edited()){
+        if (params.edited()) {
             query.and(qComment.edited.isTrue());
-        }else {
+        } else {
             query.and(qComment.edited.isFalse());
         }
         return commentsRepository.findAll(query, pageable).stream()
