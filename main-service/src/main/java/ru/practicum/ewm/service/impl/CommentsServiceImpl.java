@@ -1,7 +1,6 @@
 package ru.practicum.ewm.service.impl;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,15 +55,22 @@ public class CommentsServiceImpl implements CommentsService {
     public List<CommentDto> getAllForEvent(Long userId, Long eventId) {
         usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id - " + userId + " not found"));
-        eventsRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event with id - " + eventId + " not found"));
-        BooleanExpression query = QComment.comment.event.id.eq(eventId);
+        if (eventId != null) {
+            eventsRepository.findById(eventId)
+                    .orElseThrow(() -> new NotFoundException("Event with id - " + eventId + " not found"));
+        }
+        BooleanBuilder query = new BooleanBuilder();
+        query.and(QComment.comment.author.id.eq(userId));
+        if (eventId != null) {
+            query.and(QComment.comment.event.id.eq(eventId));
+        }
         List<CommentDto> commentDtoList = new ArrayList<>();
         commentsRepository.findAll(query).iterator()
                 .forEachRemaining(comment -> commentDtoList.add(mapper.mapToDto(comment)));
 
         return commentDtoList;
     }
+
 
     @Override
     public void delete(Long userId, Long commentId) {
@@ -93,10 +99,12 @@ public class CommentsServiceImpl implements CommentsService {
         if (params.events() != null) {
             query.or(qComment.event.id.in(params.users()));
         }
-        if (params.edited()) {
-            query.and(qComment.edited.isTrue());
-        } else {
-            query.and(qComment.edited.isFalse());
+        if (params.edited() != null) {
+            if (params.edited()) {
+                query.and(qComment.edited.isTrue());
+            } else {
+                query.and(qComment.edited.isFalse());
+            }
         }
         return commentsRepository.findAll(query, pageable).stream()
                 .map(mapper::mapToDto)

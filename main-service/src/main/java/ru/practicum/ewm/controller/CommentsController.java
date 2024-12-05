@@ -39,7 +39,7 @@ public class CommentsController {
 
     @GetMapping("/users/{userId}/comments")
     public List<CommentDto> getAllUserCommentsForEvent(@PathVariable @Positive Long userId,
-                                                       @RequestParam @Positive Long eventId) {
+                                                       @RequestParam(required = false) @Positive Long eventId) {
         log.info("retrieving all user - {} comments for event - {}", userId, eventId);
         return service.getAllForEvent(userId, eventId);
     }
@@ -56,7 +56,7 @@ public class CommentsController {
     @GetMapping("/admin/comments")
     public List<CommentDto> getAllComments(@RequestParam(required = false) Long[] users,
                                            @RequestParam(required = false) Long[] events,
-                                           @RequestParam(defaultValue = "false") Boolean edited,
+                                           @RequestParam(required = false) Boolean edited,
                                            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                            @RequestParam(defaultValue = "10") @Positive Integer size) {
         CommentSearchParams searchParams = new CommentSearchParams(users, events, edited);
