@@ -86,12 +86,12 @@ public interface EventsMapper {
             return null;
         }
 
-        List<CommentShortDto> list1 = new ArrayList<>(event.getEventComments().size());
+        List<CommentShortDto> shortDtoCommentsList = new ArrayList<>(event.getEventComments().size());
         for (Comment comment : event.getEventComments()) {
-            list1.add(commentToCommentShortDto(comment, event.getId()));
+            shortDtoCommentsList.add(commentToCommentShortDto(comment, event.getId()));
         }
 
-        return list1;
+        return shortDtoCommentsList;
     }
 
 

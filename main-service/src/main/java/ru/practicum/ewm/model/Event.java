@@ -48,7 +48,6 @@ public class Event {
     private Long views = 0L;
     @OneToMany(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
             mappedBy = "event"
     )
     private List<Comment> eventComments = new ArrayList<>();

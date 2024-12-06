@@ -19,6 +19,5 @@ public interface CommentsService {
 
     List<CommentDto> getAll(CommentSearchParams searchParams, Pageable pageable);
 
-
     CommentDto update(Long commentId, NewCommentDto updateBody);
 }
