@@ -7,6 +7,8 @@ import lombok.Setter;
 import ru.practicum.ewm.model.util.EventState;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -44,5 +46,10 @@ public class Event {
     private EventState state = EventState.PENDING;
     private String title;
     private Long views = 0L;
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "event"
+    )
+    private List<Comment> eventComments = new ArrayList<>();
 
 }

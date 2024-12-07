@@ -47,8 +47,18 @@ CREATE TABLE IF NOT EXISTS participations (
 	event_id bigint NOT NULL,
 	requester_id bigint NOT NULL,
 	status varchar(255) NOT NULL,
-	PRIMARY KEY ("id")
+	PRIMARY KEY (id)
 );
+CREATE TABLE IF NOT EXISTS comments (
+	id serial NOT NULL UNIQUE,
+	event_id bigint NOT NULL,
+	author_id bigint NOT NULL,
+	text varchar(255) NOT NULL,
+	published_at timestamp with time zone NOT NULL,
+	edited boolean NOT NULL,
+	PRIMARY KEY (id)
+);
+
 
 
 
@@ -63,3 +73,7 @@ ALTER TABLE compilations_events ADD CONSTRAINT "compilations_events_fk1" FOREIGN
 ALTER TABLE participations ADD CONSTRAINT "participations_fk2" FOREIGN KEY (event_id) REFERENCES events(id);
 
 ALTER TABLE participations ADD CONSTRAINT "participations_fk3" FOREIGN KEY (requester_id) REFERENCES users(id);
+
+ALTER TABLE comments ADD CONSTRAINT "comments_fk1" FOREIGN KEY (event_id) REFERENCES events(id);
+
+ALTER TABLE comments ADD CONSTRAINT "comments_fk2" FOREIGN KEY (author_id) REFERENCES users(id);
